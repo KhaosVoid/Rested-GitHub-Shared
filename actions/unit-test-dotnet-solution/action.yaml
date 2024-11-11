@@ -9,6 +9,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: 'Unit Test Solution with Code Coverage'
+    - name: 'Unit Test Solution'
       shell: bash
       run: dotnet test ${{ inputs.solution-path }} --no-restore
