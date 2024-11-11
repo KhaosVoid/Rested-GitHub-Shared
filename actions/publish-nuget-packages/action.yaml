@@ -1,0 +1,43 @@
+name: 'Publish NuGet Packages'
+description: 'Publishes NuGet packages from a solution to a package repository'
+inputs:
+  solution-path:
+    description: 'Solution path. Default: "./src"'
+    required: false
+    default: './src'
+  package-version:
+    description: 'Package version to use.'
+  repository-source-url:
+    description: 'NuGet package repository source URL'
+    required: true
+  nuget-api-key:
+    description: 'API key to authenticate with.'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: echo "COPYRIGHT_YEAR=$(date +'%Y')" >> $GITHUB_ENV
+
+    - name: 'Create NuGet Packages'
+      shell: bash
+      run: >
+        dotnet pack ${{ inputs.solution-path }}
+        --configuration Release
+        --no-restore
+        --no-build
+        --output ./NuGetOutput
+        -p:PackageVersion=${{ inputs.package-version }}
+        -p:Version=${{ inputs.package-version }}
+        -p:AssemblyVersion=${{ inputs.package-version }}
+        -p:InformationalVersion=${{ inputs.package-version }}
+        -p:Copyright="Copyright %A9 ${{ env.COPYRIGHT_YEAR }} Zach %22KhaosVoid%22 Tommey"
+        
+    - name: 'Publish NuGet Packages'
+      shell: bash
+      run: >
+        dotnet nuget push ./NuGetOutput/*.nupkg
+        --source ${{ inputs.repository-source-url }}
+        --api-key ${{ inputs.nuget-api-key }}
+        --skip-duplicate

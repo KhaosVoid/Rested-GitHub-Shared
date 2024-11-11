@@ -1,0 +1,30 @@
+name: 'Restore and Build .NET Solution'
+description: 'Restores package dependencies and Builds the .NET Solution'
+inputs:
+  install-dotnet:
+    description: 'Determines whether to install the .NET SDK. Default: "false"'
+    required: false
+    default: 'false'
+  dotnet-version:
+    description: 'Specifies the version of .NET to download. Default: "8.0.x"'
+    required: false
+    default: '8.0.x'
+  solution-path:
+    description: 'Solution path. Default: "./src"'
+    required: false
+    default: './src'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Restore Solution'
+      uses: KhaosVoid/Rested-GitHub-Shared/actions/restore-solution@main
+      with:
+        install-dotnet: ${{ inputs.install-dotnet }}
+        dotnet-version: ${{ inputs.dotnet-version }}
+        solution-path: ${{ inputs.solution-path }}
+
+    - name: 'Build Solution'
+      uses: KhaosVoid/Rested-GitHub-Shared/actions/build-solution@main
+      with:
+        solution-path: ${{ inputs.solution-path }}

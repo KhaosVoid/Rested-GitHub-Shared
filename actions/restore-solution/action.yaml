@@ -1,0 +1,29 @@
+name: 'Restore Solution'
+description: 'Restores package dependencies for the .NET Solution'
+inputs:
+  install-dotnet:
+    description: 'Determines whether to install the .NET SDK. Default: "false"'
+    required: false
+    default: 'false'
+  dotnet-version:
+    description: 'Specifies the version of .NET to download. Default: "8.0.x"'
+    required: false
+    default: '8.0.x'
+  solution-path:
+    description: 'Solution path. Default: "./src"'
+    required: false
+    default: './src'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Setup .NET'
+      if: ${{ inputs.install-dotnet == 'true' }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        
+    - name: 'Restore Package Dependencies'
+      working-directory: ${{ inputs.solution-path }}
+      shell: bash
+      run: dotnet restore

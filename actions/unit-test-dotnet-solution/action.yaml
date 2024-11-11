@@ -1,0 +1,14 @@
+name: 'Unit Test .NET Solution'
+description: 'Runs all unit tests for a .NET solution'
+inputs:
+  solution-path:
+    description: 'Solution path. Default: "./src"'
+    required: false
+    default: './src'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Unit Test Solution with Code Coverage'
+      shell: bash
+      run: dotnet test ${{ inputs.solution-file }} --no-restore
