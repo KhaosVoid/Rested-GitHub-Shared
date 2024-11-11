@@ -11,4 +11,4 @@ runs:
   steps:
     - name: 'Unit Test Solution with Code Coverage'
       shell: bash
-      run: dotnet test ${{ inputs.solution-file }} --no-restore
+      run: dotnet test ${{ inputs.solution-path }} --no-restore
